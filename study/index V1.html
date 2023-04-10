@@ -1,0 +1,124 @@
+<html>
+  <head>
+    <title>Href Attribute Example</title>
+    <meta charset="UTF-8">
+    <style>
+      .error{
+        outline: 3px solid red; 
+      }
+    </style>
+  </head>
+  <body>
+
+     First name: <input name="first_name" id="first_name" class="required" type="text" />
+
+      Last name: <input id="last_name" name="last_name" type="text" validateRules='{"minLength": 3}' />
+
+      Ky: <input id="l_ky" name="l_ky" type="number" class="required" validateRules='{"min": 1, "max": 10}'/>
+
+      money: <input id="money" type="number" />
+      
+      <ul id="error-messages"></ul>
+      
+      <button id="say"> Go </button>
+
+      <div id="result">
+
+      </div>
+
+
+      <script>
+        var result = [];
+        var $name = document.getElementById('first_name');
+       
+        var $lastName = document.getElementById('last_name');
+      
+        var $lKy = document.getElementById('l_ky');
+        
+        var $money = document.getElementById('money');
+        
+        function validateForm()  {
+          var reqiredFields = document.getElementsByClassName("required"); // [node, node, node]
+          // error-messages.innerHTML = '';
+          var isValid = true;
+          var errorsList = [];
+          debugger;     
+          Array.prototype.slice.call(reqiredFields).forEach(function(element) {
+            // element.removeClassName('invalid')
+             var elementValue = element.value.trim();
+             var validateRules = JSON.parse(element.getAttribute('validateRules'));
+
+             if (elementValue === '') {
+              var error = element.getAttribute('name') + ' is empty';
+              isValid = false;
+              errorsList.push(error);
+             }
+
+             if (validateRules) {
+              if (validateRules.min && +elementValue > validateRules.min) {
+                var error = element.getAttribute('name') + ' is less than min value';
+                isValid = false;
+                errorsList.push(error);
+              }
+
+              if (validateRules.max && +elementValue > validateRules.max) {
+                var error = element.getAttribute('name') + ' is more than max value';
+                isValid = false;
+                errorsList.push(error);
+              }
+              // if (validateRules.maxSize && ) {
+              //   var error = element.getAttribute('name') + ' is more than expected length';
+              //   isValid = false;
+              //   errorsList.push(error);
+              // }
+              // if (validateRules.minSize && ) {
+              //   // var error = element.getAttribute('name') + ' is more than expected length';
+              //   // isValid = false;
+              //   // errorsList.push(error);
+              //   isValid = getValidationResult(element.getAttribute('name'), errorsList, ' is more than expected length');
+              // }
+              if (isValid) alert('im valid')
+            }
+          });
+         // [] === 0, ['error 1', 'error 2 ' ... etc] = 3
+          if (errorsList.length) { /// 0 =>  1 => ['error 1', 'error 2 ' ... etc]
+             var errorsHtml = errorsList.map(function(errorMsg) {
+                  return '<li>' + errorMsg + '</li>'; // '<li>error 1</li><li>error 2</li>'
+            }, '').join('');
+            // reduce
+            document.getElementById('error-messages').innerHTML = errorsHtml;
+          } else {
+
+          }
+        };
+  // что будет если ошибок не будет!
+        function getInvalidResult(name, errorsList, msg) {
+          
+          return false;
+        };
+
+        function say_hi(e) {
+          var entity = {
+            name: $name.value,
+            lastName: $lastName.value,
+            lKy: $lKy.value,
+            money: $money.value,
+          };
+        
+          var isValid = validateForm(entity);
+          if (isValid) {
+            result.push(entity);
+            result.sort(function(e1, e2){
+              return e2.lKy - e1.lKy
+            });
+
+            document.getElementById('result').innerHTML = result.reduce((html,student)  => {
+              return html + '<hr><p> Name: ' + student.name + '</p><p>lastName: ' + student.lastName + '</p><p>Ky:' + student.lKy + '</p><p>Money: '+student.money +'</p>';
+            },'')
+          }
+        }
+      
+        document.getElementById('say').addEventListener('click', say_hi)
+      </script>
+  </body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="todo-app">
+      <div class="todo-input-wrapper">
+        <label>
+          Name:
+          <input type="text" class="add-todo-name" name="name" />
+        </label>
+        <button class="add-todo-button">Добавить</button>
+        <button class="pop-todo-button">Убрать</button>
+      </div>
+      <div class="todo-list"></div>
+    </div>
+    
+    <script> 
+      var $todoListEl = document.getElementsByClassName('todo-list');
+      var $addTodoBtn = document.getElementsByClassName('add-todo-button');
+      var $addTodoName = document.getElementsByClassName('add-todo-name');
+      var $popTodoList = document.getElementsByClassName('pop-todo-button');
+
+      var todoList = JSON.parse(localStorage.getItem('myTodoList'))|| [];
+
+      $addTodoBtn[0].addEventListener('click', addTodo);
+      $todoListEl[0].addEventListener('click', changeStatus);
+      $addTodoName[0].addEventListener('input', inputChange);
+
+      var renderTodoList = function(list) {
+        var listHtml = list.reduce(function(acc, todo) {
+          var checkboxHtml = '<input class="todo-item-chekbox" name="' + todo.name +'"type="checkbox" ' + (todo.status ? 'checked' : '')  + ' />';
+          var item = '<label class="todo-item">' 
+            + checkboxHtml
+            + todo.name 
+          + '</label>';
+          return acc + item;
+        }, '');
+        $todoListEl[0].innerHTML = listHtml;
+      }
+
+      function changeStatus(e) {
+        var checkbox = e.srcElement;
+        if (checkbox.type === 'checkbox') {
+          todoList.map(function (todo) {
+            if (todo.name === checkbox.name) {
+              todo.status = checkbox.checked;
+            }
+          });
+        }
+        localStorage.setItem('myTodoList', JSON.stringify(todoList))
+      }
+
+      //var removeId = this.items.indexOf(id);
+
+      //function inputChange(e) {
+      //$addTodoBtn[0].setAttribute('disabled', !e.target.value.trim() ? '' : 's');
+      //console.log(e);
+      //}
+      
+      function addTodo() {
+         var name = $addTodoName[0].value;
+         var todo = {
+          name: name, 
+          status: false
+         };
+
+        todoList.push(todo);
+        renderTodoList(todoList);
+        localStorage.setItem('myTodoList', JSON.stringify(todoList))
+      }
+
+      renderTodoList(todoList);
+    </script>
+</body>
+</html>

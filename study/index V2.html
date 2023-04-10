@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>Href Attribute Example</title>
+    <meta charset="UTF-8">
+    <style>
+      .error{
+      outline: 3px solid red; 
+    }
+    </style>
+  </head>
+  <body>
+     First name: <input id="first_name" type="text" />
+
+      Last name: <input id="last_name" type="text" />
+
+      Ky: <input id="l_ky" type="number" min="1" max="10" maxlength="2"  required/>
+
+      money: <input id="money" type="number" />
+      
+      <button id="say"> Go </button>
+
+      <div id="result">  </div>
+
+      <script>
+        var result = [];
+        var $name = document.getElementById('first_name');
+       
+        var $lastName = document.getElementById('last_name');
+      
+        var $lKy = document.getElementById('l_ky');
+        
+        var $money = document.getElementById('money');
+        
+
+        function validateForm()  {
+             var u = document.getElementById('first_name').value;
+             var p = document.getElementById('last_name').value;
+             var k = document.getElementById('l_ky').value;
+             var m = document.getElementById('money').value;
+
+             if(u== "") {
+                 alert("Please enter your First name")
+                
+                 return false;
+             }
+             if(p == "") {
+                 alert("Please enter you Last name");
+                 return false;
+             }
+             if(k == "") {
+                 alert("Please enter yor Ky");
+                 return false;
+             }
+             if(m == "") {
+                 alert("Please enter you money");
+                 return false;
+             }
+
+             alert("All datas are valid!, send it to the server!")
+            
+             return true;
+            };
+
+        function say_hi(e) {
+          var entity = {
+            name: $name.value,
+            lastName: $lastName.value,
+            lKy: $lKy.value,
+            money: $money.value,
+          };
+        
+          var isValid = validateForm(entity);
+          if (isValid) {
+            result.push(entity);
+            result.sort(function(e1, e2){
+              return e2.lKy - e1.lKy
+            });
+
+            document.getElementById('result').innerHTML = result.reduce((html,student)  => {
+              return html + '<hr><p> Name: ' + student.name + '</p><p>lastName: ' + student.lastName + '</p><p>Ky:' + student.lKy + '</p><p>Money: '+student.money +'</p>';
+            },'')
+          }
+        }
+      
+        document.getElementById('say').addEventListener('click', say_hi)
+      </script>
+  </body>
+</html>
